@@ -5,18 +5,33 @@ $(document).ready(function () {
     let menuItems = [];
     let currentCategory = 'all';
 
-    // API base URL - change this to your server URL
+    // API base URL
     const API_URL = 'http://localhost:3000/api';
 
     // Initialize the application
     init();
 
     function init() {
-        loadMenuItems();
+        loadMenuItems(); // This will now fetch from the database
         setupEventListeners();
         updateCartDisplay();
     }
 
+    // Load menu items from the server
+    function loadMenuItems() {
+        $.ajax({
+            url: `${API_URL}/menu`,
+            method: 'GET',
+            success: function (data) {
+                menuItems = data; // Store the fetched data
+                displayMenuItems();
+            },
+            error: function (error) {
+                console.error("Failed to load menu items:", error);
+                $('#menuGrid').html('<p style="text-align: center;">Failed to load menu. Please try again later.</p>');
+            }
+        });
+    }
     // Event Listeners
     function setupEventListeners() {
         // Navigation
@@ -84,109 +99,6 @@ $(document).ready(function () {
         });
     }
 
-    // Load menu items from server
-    function loadMenuItems() {
-        $('#menuGrid').html('<div class="loading"></div>');
-
-        $.get(`${API_URL}/menu`)
-            .done(function (data) {
-                menuItems = data;
-                displayMenuItems();
-            })
-            .fail(function () {
-                // Fallback to sample data if server is not available
-                console.log('Server not available, using sample data');
-                menuItems = getSampleMenuItems();
-                displayMenuItems();
-            });
-    }
-
-    // Sample menu items (fallback when server is not available)
-    function getSampleMenuItems() {
-        return [
-            {
-                _id: '1',
-                name: 'Margherita Pizza',
-                description: 'Fresh tomatoes, mozzarella cheese, basil leaves',
-                price: 12.99,
-                category: 'mains',
-                image: '🍕'
-            },
-            {
-                _id: '2',
-                name: 'Caesar Salad',
-                description: 'Crisp romaine lettuce, parmesan, croutons',
-                price: 8.99,
-                category: 'appetizers',
-                image: '🥗'
-            },
-            {
-                _id: '3',
-                name: 'Grilled Salmon',
-                description: 'Atlantic salmon with lemon herb seasoning',
-                price: 18.99,
-                category: 'mains',
-                image: '🐟'
-            },
-            {
-                _id: '4',
-                name: 'Chocolate Cake',
-                description: 'Rich chocolate cake with vanilla ice cream',
-                price: 6.99,
-                category: 'desserts',
-                image: '🍰'
-            },
-            {
-                _id: '5',
-                name: 'Fresh Orange Juice',
-                description: 'Freshly squeezed orange juice',
-                price: 3.99,
-                category: 'beverages',
-                image: '🍊'
-            },
-            {
-                _id: '6',
-                name: 'Buffalo Wings',
-                description: 'Spicy chicken wings with blue cheese dip',
-                price: 9.99,
-                category: 'appetizers',
-                image: '🍗'
-            },
-            {
-                _id: '7',
-                name: 'Beef Burger',
-                description: 'Juicy beef patty with lettuce, tomato, and fries',
-                price: 14.99,
-                category: 'mains',
-                image: '🍔'
-            },
-            {
-                _id: '8',
-                name: 'Tiramisu',
-                description: 'Classic Italian dessert with coffee and mascarpone',
-                price: 7.99,
-                category: 'desserts',
-                image: '🍮'
-            },
-            {
-                _id: '9',
-                name: 'Iced Coffee',
-                description: 'Cold brew coffee with milk and ice',
-                price: 4.99,
-                category: 'beverages',
-                image: '☕'
-            },
-            {
-                _id: '10',
-                name: 'Garlic Bread',
-                description: 'Toasted bread with garlic butter and herbs',
-                price: 5.99,
-                category: 'appetizers',
-                image: '🥖'
-            }
-        ];
-    }
-
     // Display menu items
     function displayMenuItems() {
         const filteredItems = currentCategory === 'all'
@@ -199,18 +111,18 @@ $(document).ready(function () {
         }
 
         const itemsHtml = filteredItems.map(item => `
-            <div class="menu-item" data-category="${item.category}">
-                <div class="menu-item-image">${item.image || '🍽️'}</div>
-                <h3>${item.name}</h3>
-                <p>${item.description}</p>
-                <div class="menu-item-footer">
-                    <span class="price">${item.price.toFixed(2)}</span>
-                    <button class="add-to-cart" onclick="addToCart('${item._id}')">
-                        Add to Cart
-                    </button>
-                </div>
+        <div class="menu-item" data-category="${item.category}">
+            <img class="menu-item-image" src="${item.image}" alt="${item.name}">
+            <h3>${item.name}</h3>
+            <p>${item.description}</p>
+            <div class="menu-item-footer">
+                <span class="price">${item.price.toFixed(2)}</span>
+                <button class="add-to-cart" onclick="addToCart('${item._id}')">
+                    Add to Cart
+                </button>
             </div>
-        `).join('');
+        </div>
+    `).join('');
 
         $('#menuGrid').html(itemsHtml);
     }

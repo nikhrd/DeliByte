@@ -21,13 +21,13 @@ mongoose.connect(MONGODB_URI, {
 })
     .then(() => {
         console.log('Connected to MongoDB');
-        seedDatabase();
     })
     .catch(err => {
         console.error('MongoDB connection error:', err);
     });
 
-// Mongoose Schemas
+// Mongoose Schemas (Move menuItemSchema to the models folder in a real app)
+// We will define it here for simplicity and to make it a self-contained file.
 const menuItemSchema = new mongoose.Schema({
     name: { type: String, required: true },
     description: { type: String, required: true },
@@ -35,12 +35,14 @@ const menuItemSchema = new mongoose.Schema({
     category: {
         type: String,
         required: true,
-        enum: ['appetizers', 'mains', 'desserts', 'beverages']
+        enum: ['burgers', 'pizzas', 'desserts', 'beverages']
     },
-    image: { type: String, default: '🍽️' },
+    image: { type: String, default: '' },
     available: { type: Boolean, default: true },
     createdAt: { type: Date, default: Date.now }
 });
+
+const MenuItem = mongoose.model('MenuItem', menuItemSchema);
 
 const orderSchema = new mongoose.Schema({
     orderId: { type: String, required: true, unique: true },
@@ -68,215 +70,18 @@ const orderSchema = new mongoose.Schema({
 });
 
 // Models
-const MenuItem = mongoose.model('MenuItem', menuItemSchema);
 const Order = mongoose.model('Order', orderSchema);
-
-// Seed database with sample data
-async function seedDatabase() {
-    try {
-        const count = await MenuItem.countDocuments();
-        if (count === 0) {
-            console.log('Seeding database with sample menu items...');
-
-            const sampleItems = [
-                {
-                    name: 'Margherita Pizza',
-                    description: 'Fresh tomatoes, mozzarella cheese, basil leaves on crispy thin crust',
-                    price: 12.99,
-                    category: 'mains',
-                    image: '🍕'
-                },
-                {
-                    name: 'Caesar Salad',
-                    description: 'Crisp romaine lettuce, parmesan cheese, croutons with classic caesar dressing',
-                    price: 8.99,
-                    category: 'appetizers',
-                    image: '🥗'
-                },
-                {
-                    name: 'Grilled Salmon',
-                    description: 'Atlantic salmon fillet with lemon herb seasoning and roasted vegetables',
-                    price: 18.99,
-                    category: 'mains',
-                    image: '🐟'
-                },
-                {
-                    name: 'Chocolate Lava Cake',
-                    description: 'Rich chocolate cake with molten center, served with vanilla ice cream',
-                    price: 6.99,
-                    category: 'desserts',
-                    image: '🍰'
-                },
-                {
-                    name: 'Fresh Orange Juice',
-                    description: 'Freshly squeezed orange juice, no added sugar',
-                    price: 3.99,
-                    category: 'beverages',
-                    image: '🍊'
-                },
-                {
-                    name: 'Buffalo Wings',
-                    description: 'Spicy chicken wings with blue cheese dip and celery sticks',
-                    price: 9.99,
-                    category: 'appetizers',
-                    image: '🍗'
-                },
-                {
-                    name: 'Classic Beef Burger',
-                    description: 'Juicy beef patty with lettuce, tomato, onion, and fries',
-                    price: 14.99,
-                    category: 'mains',
-                    image: '🍔'
-                },
-                {
-                    name: 'Tiramisu',
-                    description: 'Classic Italian dessert with coffee-soaked ladyfingers and mascarpone',
-                    price: 7.99,
-                    category: 'desserts',
-                    image: '🍮'
-                },
-                {
-                    name: 'Iced Coffee',
-                    description: 'Cold brew coffee with milk and ice, perfectly refreshing',
-                    price: 4.99,
-                    category: 'beverages',
-                    image: '☕'
-                },
-                {
-                    name: 'Garlic Bread',
-                    description: 'Toasted artisan bread with garlic butter and fresh herbs',
-                    price: 5.99,
-                    category: 'appetizers',
-                    image: '🥖'
-                },
-                {
-                    name: 'Chicken Alfredo',
-                    description: 'Tender chicken breast with fettuccine in creamy alfredo sauce',
-                    price: 16.99,
-                    category: 'mains',
-                    image: '🍝'
-                },
-                {
-                    name: 'Ice Cream Sundae',
-                    description: 'Three scoops of vanilla ice cream with chocolate sauce and cherry',
-                    price: 5.99,
-                    category: 'desserts',
-                    image: '🍨'
-                },
-                {
-                    name: 'Fresh Lemonade',
-                    description: 'House-made lemonade with fresh lemons and mint',
-                    price: 3.49,
-                    category: 'beverages',
-                    image: '🍋'
-                },
-                {
-                    name: 'Stuffed Mushrooms',
-                    description: 'Button mushrooms stuffed with cream cheese and herbs',
-                    price: 7.99,
-                    category: 'appetizers',
-                    image: '🍄'
-                },
-                {
-                    name: 'Fish Tacos',
-                    description: 'Grilled white fish with cabbage slaw and lime crema',
-                    price: 13.99,
-                    category: 'mains',
-                    image: '🌮'
-                }
-            ];
-
-            await MenuItem.insertMany(sampleItems);
-            console.log('Database seeded successfully!');
-        }
-    } catch (error) {
-        console.error('Error seeding database:', error);
-    }
-}
 
 // API Routes
 
-// Get all menu items
+// GET all menu items
 app.get('/api/menu', async (req, res) => {
     try {
-        const menuItems = await MenuItem.find({ available: true }).sort({ name: 1 });
+        const menuItems = await MenuItem.find({});
         res.json(menuItems);
     } catch (error) {
         console.error('Error fetching menu items:', error);
         res.status(500).json({ error: 'Failed to fetch menu items' });
-    }
-});
-
-// Get menu items by category
-app.get('/api/menu/category/:category', async (req, res) => {
-    try {
-        const { category } = req.params;
-        const menuItems = await MenuItem.find({
-            category: category,
-            available: true
-        }).sort({ name: 1 });
-        res.json(menuItems);
-    } catch (error) {
-        console.error('Error fetching menu items by category:', error);
-        res.status(500).json({ error: 'Failed to fetch menu items' });
-    }
-});
-
-// Get single menu item
-app.get('/api/menu/:id', async (req, res) => {
-    try {
-        const menuItem = await MenuItem.findById(req.params.id);
-        if (!menuItem) {
-            return res.status(404).json({ error: 'Menu item not found' });
-        }
-        res.json(menuItem);
-    } catch (error) {
-        console.error('Error fetching menu item:', error);
-        res.status(500).json({ error: 'Failed to fetch menu item' });
-    }
-});
-
-// Add new menu item (admin functionality)
-app.post('/api/menu', async (req, res) => {
-    try {
-        const menuItem = new MenuItem(req.body);
-        await menuItem.save();
-        res.status(201).json(menuItem);
-    } catch (error) {
-        console.error('Error creating menu item:', error);
-        res.status(400).json({ error: 'Failed to create menu item' });
-    }
-});
-
-// Update menu item (admin functionality)
-app.put('/api/menu/:id', async (req, res) => {
-    try {
-        const menuItem = await MenuItem.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            { new: true, runValidators: true }
-        );
-        if (!menuItem) {
-            return res.status(404).json({ error: 'Menu item not found' });
-        }
-        res.json(menuItem);
-    } catch (error) {
-        console.error('Error updating menu item:', error);
-        res.status(400).json({ error: 'Failed to update menu item' });
-    }
-});
-
-// Delete menu item (admin functionality)
-app.delete('/api/menu/:id', async (req, res) => {
-    try {
-        const menuItem = await MenuItem.findByIdAndDelete(req.params.id);
-        if (!menuItem) {
-            return res.status(404).json({ error: 'Menu item not found' });
-        }
-        res.json({ message: 'Menu item deleted successfully' });
-    } catch (error) {
-        console.error('Error deleting menu item:', error);
-        res.status(500).json({ error: 'Failed to delete menu item' });
     }
 });
 
@@ -301,7 +106,7 @@ app.post('/api/orders', async (req, res) => {
         // In a real application, you would send confirmation email/SMS here
         console.log(`New order received: ${orderId}`);
         console.log('Customer:', order.customer.name);
-        console.log('Total:', `$${order.total.toFixed(2)}`);
+        console.log('Total:', `₹${order.total.toFixed(2)}`);
 
         res.status(201).json({
             message: 'Order placed successfully',

@@ -1,4 +1,3 @@
-// scripts/seedDatabase.js
 const mongoose = require('mongoose');
 require('dotenv').config();
 
@@ -12,9 +11,9 @@ const menuItemSchema = new mongoose.Schema({
     category: {
         type: String,
         required: true,
-        enum: ['appetizers', 'mains', 'desserts', 'beverages']
+        enum: ['burgers', 'pizzas', 'desserts', 'beverages']
     },
-    image: { type: String, default: '🍽️' },
+    image: { type: String, default: '' },
     available: { type: Boolean, default: true },
     createdAt: { type: Date, default: Date.now }
 });
@@ -22,174 +21,90 @@ const menuItemSchema = new mongoose.Schema({
 const MenuItem = mongoose.model('MenuItem', menuItemSchema);
 
 const sampleMenuItems = [
-    // Appetizers
     {
-        name: 'Caesar Salad',
-        description: 'Crisp romaine lettuce, parmesan cheese, croutons with classic caesar dressing',
-        price: 8.99,
-        category: 'appetizers',
-        image: '🥗'
+        name: 'Cheese Burger',
+        description: 'Juicy patty topped with melted cheese, lettuce, tomato, onion served on a toasted bun',
+        price: 150,
+        category: 'burgers',
+        image: 'images/cheeseburger.jpg'
     },
     {
-        name: 'Buffalo Wings',
-        description: 'Spicy chicken wings with blue cheese dip and celery sticks',
-        price: 9.99,
-        category: 'appetizers',
-        image: '🍗'
+        name: 'BBQ Chicken pizza',
+        description: 'Barbecue chicken pizza with grilled onions and cheese',
+        price: 250,
+        category: 'pizzas',
+        image: 'images/bbq_pizza.jpg'
     },
-    {
-        name: 'Garlic Bread',
-        description: 'Toasted artisan bread with garlic butter and fresh herbs',
-        price: 5.99,
-        category: 'appetizers',
-        image: '🥖'
-    },
-    {
-        name: 'Stuffed Mushrooms',
-        description: 'Button mushrooms stuffed with cream cheese, herbs, and breadcrumbs',
-        price: 7.99,
-        category: 'appetizers',
-        image: '🍄'
-    },
-    {
-        name: 'Mozzarella Sticks',
-        description: 'Golden fried mozzarella with marinara sauce',
-        price: 6.99,
-        category: 'appetizers',
-        image: '🧀'
-    },
-
-    // Main Courses
-    {
-        name: 'Margherita Pizza',
-        description: 'Fresh tomatoes, mozzarella cheese, basil leaves on crispy thin crust',
-        price: 12.99,
-        category: 'mains',
-        image: '🍕'
-    },
-    {
-        name: 'Grilled Salmon',
-        description: 'Atlantic salmon fillet with lemon herb seasoning and roasted vegetables',
-        price: 18.99,
-        category: 'mains',
-        image: '🐟'
-    },
-    {
-        name: 'Classic Beef Burger',
-        description: 'Juicy beef patty with lettuce, tomato, onion, cheese, and fries',
-        price: 14.99,
-        category: 'mains',
-        image: '🍔'
-    },
-    {
-        name: 'Chicken Alfredo',
-        description: 'Tender chicken breast with fettuccine in creamy alfredo sauce',
-        price: 16.99,
-        category: 'mains',
-        image: '🍝'
-    },
-    {
-        name: 'Fish Tacos',
-        description: 'Grilled white fish with cabbage slaw, lime crema, and corn tortillas',
-        price: 13.99,
-        category: 'mains',
-        image: '🌮'
-    },
-    {
-        name: 'BBQ Ribs',
-        description: 'Slow-cooked pork ribs with house BBQ sauce and coleslaw',
-        price: 19.99,
-        category: 'mains',
-        image: '🥩'
-    },
-    {
-        name: 'Vegetable Stir Fry',
-        description: 'Mixed vegetables in teriyaki sauce served over jasmine rice',
-        price: 11.99,
-        category: 'mains',
-        image: '🥬'
-    },
-
-    // Desserts
-    {
-        name: 'Chocolate Lava Cake',
-        description: 'Rich chocolate cake with molten center, served with vanilla ice cream',
-        price: 6.99,
-        category: 'desserts',
-        image: '🍰'
-    },
-    {
-        name: 'Tiramisu',
-        description: 'Classic Italian dessert with coffee-soaked ladyfingers and mascarpone',
-        price: 7.99,
-        category: 'desserts',
-        image: '🍮'
-    },
-    {
-        name: 'Ice Cream Sundae',
-        description: 'Three scoops of vanilla ice cream with chocolate sauce and cherry',
-        price: 5.99,
-        category: 'desserts',
-        image: '🍨'
-    },
-    {
-        name: 'Cheesecake',
-        description: 'New York style cheesecake with berry compote',
-        price: 6.49,
-        category: 'desserts',
-        image: '🍰'
-    },
-    {
-        name: 'Apple Pie',
-        description: 'Homemade apple pie with cinnamon and vanilla ice cream',
-        price: 5.99,
-        category: 'desserts',
-        image: '🥧'
-    },
-
-    // Beverages
     {
         name: 'Fresh Orange Juice',
         description: 'Freshly squeezed orange juice, no added sugar',
-        price: 3.99,
+        price: 40,
         category: 'beverages',
-        image: '🍊'
+        image: 'images/orange_juice.jpg'
+    },
+    {
+        name: 'Chocolate Lava Cake',
+        description: 'Rich chocolate cake with molten center, served with vanilla ice cream',
+        price: 110,
+        category: 'desserts',
+        image: 'images/chocolate_cake.jpg'
+    },
+    {
+        name: 'Chicken Burger',
+        description: 'Grilled or fried chicken breast patty, topped with lettuce, tomato, cheese served on a bun.',
+        price: 130,
+        category: 'burgers',
+        image: 'images/chicken_burger.jpg'
+    },
+    {
+        name: 'Margherita Pizza',
+        description: 'Fresh tomatoes, mozzarella cheese, basil leaves on crispy thin crust',
+        price: 160,
+        category: 'pizzas',
+        image: 'images/margherita_pizza.jpg'
     },
     {
         name: 'Iced Coffee',
         description: 'Cold brew coffee with milk and ice, perfectly refreshing',
-        price: 4.99,
+        price: 100,
         category: 'beverages',
-        image: '☕'
+        image: 'images/iced_coffee.avif'
     },
     {
-        name: 'Fresh Lemonade',
-        description: 'House-made lemonade with fresh lemons and mint',
-        price: 3.49,
-        category: 'beverages',
-        image: '🍋'
+        name: 'Tiramisu',
+        description: 'Classic Italian dessert with coffee-soaked ladyfingers and mascarpone',
+        price: 120,
+        category: 'desserts',
+        image: 'images/tiramisu.jpg'
     },
     {
-        name: 'Milkshake',
-        description: 'Thick and creamy milkshake - vanilla, chocolate, or strawberry',
-        price: 4.99,
-        category: 'beverages',
-        image: '🥤'
+        name: 'Mushroom Swiss Burger',
+        description: 'Burger topped with sauteed mushrooms, Swiss cheese, lettuce, and mayo',
+        price: 160,
+        category: 'burgers',
+        image: 'images/mushroom_burger.jpg'
     },
     {
-        name: 'Hot Chocolate',
-        description: 'Rich hot chocolate with whipped cream and marshmallows',
-        price: 3.99,
-        category: 'beverages',
-        image: '☕'
+        name: 'Pepperoni Pizza',
+        description: 'Classic Italian pizza topped with spicy pepperoni slices,mozzarella cheese, and tomato sauce',
+        price: 170,
+        category: 'pizzas',
+        image: 'images/pepperoni_pizza.jpg'
     },
     {
         name: 'Fruit Smoothie',
         description: 'Blended fresh fruits with yogurt and honey',
-        price: 5.49,
+        price: 60,
         category: 'beverages',
-        image: '🥤'
-    }
+        image: 'images/fruit_smoothie.jpg'
+    },
+    {
+        name: 'Apple Pie',
+        description: 'Homemade apple pie with cinnamon and vanilla ice cream',
+        price: 160,
+        category: 'desserts',
+        image: 'images/apple_pie.jpg'
+    },
 ];
 
 async function seedDatabase() {

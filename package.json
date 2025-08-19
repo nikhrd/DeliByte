@@ -1,7 +1,7 @@
 {
-    "name": "restaurant-website",
+    "name": "DeliByte",
     "version": "1.0.0",
-    "description": "A complete restaurant website with ordering system",
+    "description": "A simple restaurant website with ordering system",
     "main": "server.js",
     "scripts": {
         "start": "node server.js",
@@ -20,7 +20,7 @@
         "express",
         "jquery"
     ],
-    "author": "Your Name",
+    "author": "Nikhitha",
     "license": "MIT",
     "dependencies": {
         "bcryptjs": "^2.4.3",
@@ -47,10 +47,10 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/yourusername/restaurant-website.git"
+        "url": "git+https://github.com/nikhrd/DeliByte.git"
     },
     "bugs": {
-        "url": "https://github.com/yourusername/restaurant-website/issues"
+        "url": "https://github.com/nikhrd/DeliByte/issues"
     },
-    "homepage": "https://github.com/yourusername/restaurant-website#readme"
+    "homepage": "https://github.com/nikhrd/DeliByte#readme"
 }
